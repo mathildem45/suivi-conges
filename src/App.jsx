@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Dashboard from "./components/Dashboard";
 import Calendar from "./components/Calendar";
 import LeaveHistory from "./components/LeaveHistory";
+import AddLeaveModal from "./components/AddLeaveModal";
 
 import { settings } from "./data/settings";
 import { congesInitiaux } from "./data/conges";
@@ -12,6 +13,7 @@ import "./App.css";
 
 
 function App() {
+
 
   const [conges, setConges] = useState(() => {
 
@@ -25,6 +27,12 @@ function App() {
   });
 
 
+
+  const [dateSelectionnee, setDateSelectionnee] =
+    useState(null);
+
+
+
   useEffect(() => {
 
     localStorage.setItem(
@@ -36,22 +44,47 @@ function App() {
 
 
 
+  function ajouterConge(nouveauConge) {
+
+    setConges([
+      ...conges,
+      nouveauConge
+    ]);
+
+  }
+
+
+
+  function supprimerConge(conge) {
+
+    setConges(
+      conges.filter(
+        c =>
+          c.debut !== conge.debut
+      )
+    );
+
+  }
+
+
+
   const cpPris =
     conges
-      .filter(conge => conge.type === "CP")
+      .filter(c => c.type === "CP")
       .reduce(
-        (total, conge) =>
-          total + conge.jours,
+        (total,c) =>
+          total + c.jours,
         0
       );
 
 
+
   const rttPris =
     conges
-      .filter(conge => conge.type === "RTT")
+      .filter(c => c.type === "RTT")
       .reduce(
-        (total, conge) =>
-          total + conge.jours,
+        (total,c) =>
+          total + c.jours,
         0
       );
 
@@ -77,16 +110,44 @@ function App() {
       />
 
 
+
       <Calendar
+
         conges={conges}
+
         setConges={setConges}
+
+        onSelectDate={setDateSelectionnee}
+
       />
+
 
 
       <LeaveHistory
+
         conges={conges}
-        setConges={setConges}
+
+        onDelete={supprimerConge}
+
       />
+
+
+
+      {dateSelectionnee && (
+
+        <AddLeaveModal
+
+          date={dateSelectionnee}
+
+          onClose={() =>
+            setDateSelectionnee(null)
+          }
+
+          onSave={ajouterConge}
+
+        />
+
+      )}
 
 
     </div>

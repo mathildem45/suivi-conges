@@ -1,26 +1,39 @@
 import { useState } from "react";
 
+
 function AddLeaveModal({
   date,
   onClose,
   onSave
 }) {
 
+
   const [type, setType] = useState("CP");
   const [duree, setDuree] = useState(1);
-  const [moment, setMoment] = useState("journee");
+  const [moment, setMoment] = useState("matin");
+
 
 
   function enregistrer() {
 
     onSave({
-      date,
+
+      debut: date,
+      fin: date,
       type,
-      duree,
-      moment
+      jours: Number(duree),
+      moment:
+        duree === "0.5"
+          ? moment
+          : null
+
     });
 
+
+    onClose();
+
   }
+
 
 
   return (
@@ -30,43 +43,17 @@ function AddLeaveModal({
       <div className="modal">
 
         <h2>
-          📅 Nouveau congé
+          📅 Ajouter un congé
         </h2>
 
 
         <p>
-          Date sélectionnée
+          Date :
         </p>
 
-        <h3>
+        <strong>
           {date}
-        </h3>
-
-
-        <label>
-
-          Type
-
-          <br />
-
-          <select
-            value={type}
-            onChange={(e) =>
-              setType(e.target.value)
-            }
-          >
-
-            <option value="CP">
-              🏖️ Congé payé
-            </option>
-
-            <option value="RTT">
-              ⏰ RTT
-            </option>
-
-          </select>
-
-        </label>
+        </strong>
 
 
         <br />
@@ -74,41 +61,60 @@ function AddLeaveModal({
 
 
         <label>
-
-          Durée
-
-          <br />
-
-          <select
-            value={duree}
-            onChange={(e) => {
-
-              const valeur =
-                Number(e.target.value);
-
-              setDuree(valeur);
-
-              if(valeur === 1){
-                setMoment("journee");
-              }
-
-            }}
-          >
-
-            <option value={1}>
-              Journée entière
-            </option>
-
-            <option value={0.5}>
-              Demi-journée
-            </option>
-
-          </select>
-
+          Type :
         </label>
 
+        <br />
 
-        {duree === 0.5 && (
+        <select
+          value={type}
+          onChange={
+            e => setType(e.target.value)
+          }
+        >
+
+          <option value="CP">
+            🏖️ Congé payé
+          </option>
+
+          <option value="RTT">
+            ⏰ RTT
+          </option>
+
+        </select>
+
+
+
+        <br />
+        <br />
+
+
+        <label>
+          Durée :
+        </label>
+
+        <br />
+
+        <select
+          value={duree}
+          onChange={
+            e => setDuree(e.target.value)
+          }
+        >
+
+          <option value="1">
+            Journée complète
+          </option>
+
+          <option value="0.5">
+            Demi-journée
+          </option>
+
+        </select>
+
+
+
+        {duree === "0.5" && (
 
           <>
 
@@ -116,33 +122,32 @@ function AddLeaveModal({
             <br />
 
             <label>
-
-              Moment
-
-              <br />
-
-              <select
-                value={moment}
-                onChange={(e) =>
-                  setMoment(e.target.value)
-                }
-              >
-
-                <option value="matin">
-                  🌅 Matin
-                </option>
-
-                <option value="apres-midi">
-                  🌇 Après-midi
-                </option>
-
-              </select>
-
+              Moment :
             </label>
+
+            <br />
+
+            <select
+              value={moment}
+              onChange={
+                e => setMoment(e.target.value)
+              }
+            >
+
+              <option value="matin">
+                🌅 Matin
+              </option>
+
+              <option value="apres-midi">
+                🌇 Après-midi
+              </option>
+
+            </select>
 
           </>
 
         )}
+
 
 
         <br />

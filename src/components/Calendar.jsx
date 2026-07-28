@@ -1,9 +1,10 @@
-import { useState } from "react";
+
 
 
 function Calendar({
   conges = [],
-  setConges
+  setConges,
+  onSelectDate
 }) {
 
   const mois = [
@@ -22,8 +23,7 @@ function Calendar({
   ];
 
 
-  const [dateSelectionnee, setDateSelectionnee] =
-    useState(null);
+  
 
 
 
@@ -116,7 +116,7 @@ function Calendar({
     }
 
 
-    setDateSelectionnee(date);
+    onSelectDate(date);
 
   }
 
