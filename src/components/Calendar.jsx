@@ -1,71 +1,151 @@
-function Calendar({ conges = [], onSelectDate, onDeleteConge }) {
+import { useState } from "react";
+
+
+function Calendar({
+  conges = [],
+  setConges
+}) {
+
   const mois = [
-    { nom: "Juin 2026", m: 5, a: 2026 },
-    { nom: "Juillet 2026", m: 6, a: 2026 },
-    { nom: "Août 2026", m: 7, a: 2026 },
-    { nom: "Septembre 2026", m: 8, a: 2026 },
-    { nom: "Octobre 2026", m: 9, a: 2026 },
-    { nom: "Novembre 2026", m: 10, a: 2026 },
-    { nom: "Décembre 2026", m: 11, a: 2026 },
-    { nom: "Janvier 2027", m: 0, a: 2027 },
-    { nom: "Février 2027", m: 1, a: 2027 },
-    { nom: "Mars 2027", m: 2, a: 2027 },
-    { nom: "Avril 2027", m: 3, a: 2027 },
-    { nom: "Mai 2027", m: 4, a: 2027 }
+    { nom: "Juin 2026", mois: 5, annee: 2026 },
+    { nom: "Juillet 2026", mois: 6, annee: 2026 },
+    { nom: "Août 2026", mois: 7, annee: 2026 },
+    { nom: "Septembre 2026", mois: 8, annee: 2026 },
+    { nom: "Octobre 2026", mois: 9, annee: 2026 },
+    { nom: "Novembre 2026", mois: 10, annee: 2026 },
+    { nom: "Décembre 2026", mois: 11, annee: 2026 },
+    { nom: "Janvier 2027", mois: 0, annee: 2027 },
+    { nom: "Février 2027", mois: 1, annee: 2027 },
+    { nom: "Mars 2027", mois: 2, annee: 2027 },
+    { nom: "Avril 2027", mois: 3, annee: 2027 },
+    { nom: "Mai 2027", mois: 4, annee: 2027 }
   ];
 
-  function creerCalendrier(mois, annee) {
+
+  const [dateSelectionnee, setDateSelectionnee] =
+    useState(null);
+
+
+
+  function creerJours(mois, annee) {
+
     const jours = [];
 
-    const premierJour = new Date(annee, mois, 1).getDay();
-    const decalage = premierJour === 0 ? 6 : premierJour - 1;
+    const premierJour =
+      new Date(annee, mois, 1).getDay();
 
-    for (let i = 0; i < decalage; i++) {
+
+    const decalage =
+      premierJour === 0
+        ? 6
+        : premierJour - 1;
+
+
+    for(let i = 0; i < decalage; i++) {
       jours.push(null);
     }
 
-    const nombreJours = new Date(annee, mois + 1, 0).getDate();
 
-    for (let i = 1; i <= nombreJours; i++) {
+    const nombreJours =
+      new Date(
+        annee,
+        mois + 1,
+        0
+      ).getDate();
+
+
+    for(let i = 1; i <= nombreJours; i++) {
       jours.push(i);
     }
 
+
     return jours;
+
   }
 
-  function trouverConge(jour, mois, annee) {
-    if (!jour) return null;
 
-    const date =
-      `${annee}-${String(mois + 1).padStart(2, "0")}-${String(jour).padStart(2, "0")}`;
 
-    return conges.find(c => c.debut === date);
+  function formatDate(jour, mois, annee) {
+
+    return (
+      `${annee}-${String(mois + 1).padStart(2,"0")}-${String(jour).padStart(2,"0")}`
+    );
+
   }
 
-  function afficherDate(jour, mois, annee) {
-    return `${String(jour).padStart(2, "0")}-${String(mois + 1).padStart(2, "0")}-${annee}`;
+
+
+  function trouverConge(date) {
+
+    return conges.find(
+      conge =>
+        conge.debut === date
+    );
+
   }
+
+
+
+  function cliquerJour(date) {
+
+    const conge =
+      trouverConge(date);
+
+
+    if(conge) {
+
+      const confirmer =
+        window.confirm(
+          "Supprimer ce congé ?"
+        );
+
+
+      if(confirmer) {
+
+        setConges(
+          conges.filter(
+            c =>
+              c.debut !== date
+          )
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    setDateSelectionnee(date);
+
+  }
+
+
 
   return (
+
     <div className="card">
 
-      <h2>📅 Calendrier des congés</h2>
+      <h2>
+        📅 Calendrier des congés
+      </h2>
 
-      <div className="legend">
-        <span className="legend-cp">🏖️ CP</span>
-        <span className="legend-rtt">⏰ RTT</span>
-      </div>
 
-      {mois.map((periode) => (
+      {mois.map(
+        periode => (
 
         <div
-          className="calendar-month"
           key={periode.nom}
+          className="calendar-month"
         >
 
-          <h3>{periode.nom}</h3>
+          <h3>
+            {periode.nom}
+          </h3>
+
 
           <div className="weekdays">
+
             <div>Lun</div>
             <div>Mar</div>
             <div>Mer</div>
@@ -73,101 +153,94 @@ function Calendar({ conges = [], onSelectDate, onDeleteConge }) {
             <div>Ven</div>
             <div>Sam</div>
             <div>Dim</div>
+
           </div>
+
 
           <div className="calendar-grid">
 
-            {creerCalendrier(periode.m, periode.a).map((jour, index) => {
+            {creerJours(
+              periode.mois,
+              periode.annee
+            )
+            .map(
+              (jour,index)=> {
+
+
+              if(!jour) {
+
+                return (
+                  <div
+                    key={index}
+                    className="empty-day"
+                  />
+                );
+
+              }
+
+
+              const date =
+                formatDate(
+                  jour,
+                  periode.mois,
+                  periode.annee
+                );
+
 
               const conge =
-                trouverConge(jour, periode.m, periode.a);
+                trouverConge(date);
+
+
 
               return (
 
                 <div
                   key={index}
                   className={
-                    !jour
-                      ? "empty-day"
-                      : conge?.type === "CP"
-                      ? "day vacation cp"
-                      : conge?.type === "RTT"
-                      ? "day vacation rtt"
-                      : "day"
+                    conge
+                    ? conge.type === "CP"
+                      ? "day cp"
+                      : "day rtt"
+                    : "day"
                   }
-                  onClick={() => {
 
-  if (!jour) return;
+                  onClick={() =>
+                    cliquerJour(date)
+                  }
 
-
-  if (conge) {
-
-    onDeleteConge(conge);
-
-  } else {
-
-    onSelectDate(
-      afficherDate(
-        jour,
-        periode.m,
-        periode.a
-      )
-    );
-
-  }
-
-}}
                 >
 
                   {jour}
-                  {conge && (
-  <small>
-    {conge.jours === 1
-      ? "Journée"
-      : conge.moment === "matin"
-      ? "Matin"
-      : "Après-midi"
-    }
-  </small>
-)}
+
 
                   {conge && (
-  <small>
-
-    {conge.type === "CP"
-      ? "🏖️"
-      : "⏰"
-    }
-
-    {" "}
-
-    {conge.jours === 0.5 && (
-      <>
-        {conge.moment?.toLowerCase().trim() === "matin"
-  ? "🌅"
-  : "🌇"
-}
-      </>
-    )}
-
-  </small>
-)}
+                    <small>
+                      {conge.type === "CP"
+                        ? "🏖️"
+                        : "⏰"
+                      }
+                    </small>
+                  )}
 
                 </div>
 
               );
 
+
             })}
 
           </div>
+
 
         </div>
 
       ))}
 
     </div>
+
   );
 
 }
+
 
 export default Calendar;
