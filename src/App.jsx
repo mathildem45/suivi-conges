@@ -6,6 +6,7 @@ import Calendar from "./components/Calendar";
 import LeaveHistory from "./components/LeaveHistory";
 import AddLeaveModal from "./components/AddLeaveModal";
 
+import { getDatesBetween } from "./utils/dates";
 import { settings } from "./data/settings";
 import { congesInitiaux } from "./data/conges";
 
@@ -44,27 +45,69 @@ function App() {
 
 
 
+
   function ajouterConge(nouveauConge) {
+
+
+    const dates = getDatesBetween(
+      nouveauConge.debut,
+      nouveauConge.fin
+    );
+
+
+
+    const nouveauxConges = dates.map(date => ({
+
+      debut: date,
+      fin: date,
+
+      type: nouveauConge.type,
+
+      jours: nouveauConge.jours,
+
+      moment: nouveauConge.moment
+
+    }));
+
+
 
     setConges([
       ...conges,
-      nouveauConge
+      ...nouveauxConges
     ]);
+
 
   }
 
 
 
-  function supprimerConge(conge) {
+
+  function supprimerConge(congeASupprimer) {
+
+
+    const confirmation =
+      window.confirm(
+        "Supprimer ce congé ?"
+      );
+
+
+    if (!confirmation) {
+      return;
+    }
+
+
 
     setConges(
       conges.filter(
         c =>
-          c.debut !== conge.debut
+          c.debut !== congeASupprimer.debut
       )
     );
 
+
   }
+
+
 
 
 
@@ -72,7 +115,7 @@ function App() {
     conges
       .filter(c => c.type === "CP")
       .reduce(
-        (total,c) =>
+        (total, c) =>
           total + c.jours,
         0
       );
@@ -83,10 +126,12 @@ function App() {
     conges
       .filter(c => c.type === "RTT")
       .reduce(
-        (total,c) =>
+        (total, c) =>
           total + c.jours,
         0
       );
+
+
 
 
 
@@ -94,7 +139,9 @@ function App() {
 
     <div className="app">
 
+
       <Header />
+
 
 
       <Dashboard
@@ -111,6 +158,7 @@ function App() {
 
 
 
+
       <Calendar
 
         conges={conges}
@@ -123,6 +171,7 @@ function App() {
 
 
 
+
       <LeaveHistory
 
         conges={conges}
@@ -130,6 +179,8 @@ function App() {
         onDelete={supprimerConge}
 
       />
+
+
 
 
 
@@ -150,11 +201,13 @@ function App() {
       )}
 
 
+
     </div>
 
   );
 
 }
+
 
 
 export default App;
