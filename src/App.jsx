@@ -5,7 +5,8 @@ import Dashboard from "./components/Dashboard";
 import Calendar from "./components/Calendar";
 import LeaveHistory from "./components/LeaveHistory";
 import AddLeaveModal from "./components/AddLeaveModal";
-
+import Bulletin from "./components/Bulletin";
+import MonthStatus from "./components/MonthStatus";
 import { getDatesBetween } from "./utils/dates";
 import { settings } from "./data/settings";
 import { congesInitiaux } from "./data/conges";
@@ -27,6 +28,18 @@ function App() {
   });
 
 
+  const [bulletin, setBulletin] = useState(() => {
+
+    const sauvegarde =
+      localStorage.getItem("dernierBulletin");
+
+    return sauvegarde
+      ? JSON.parse(sauvegarde)
+      : settings.dernierBulletin;
+
+  });
+
+
   const [dateSelectionnee, setDateSelectionnee] =
     useState(null);
 
@@ -39,6 +52,16 @@ function App() {
     );
 
   }, [conges]);
+
+
+  useEffect(() => {
+
+    localStorage.setItem(
+      "dernierBulletin",
+      JSON.stringify(bulletin)
+    );
+
+  }, [bulletin]);
 
 
   function ajouterConge(nouveauConge) {
@@ -103,78 +126,30 @@ function App() {
   }
 
 
-  const bulletin =
-    settings.dernierBulletin;
+  function enregistrerBulletin(nouveauBulletin) {
+
+    setBulletin(nouveauBulletin);
+
+  }
 
 
   const dateFinBulletin =
-    new Date(bulletin.dateFin);
+    new Date(
+      `${bulletin.mois}-01`
+    );
 
 
-  /*
-   * On ne déduit que les congés explicitement
-   * marqués comme devant être déduits.
-   */
+  dateFinBulletin.setMonth(
+    dateFinBulletin.getMonth() + 1
+  );
+
+  dateFinBulletin.setDate(0);
+
 
   const congesADeduire =
     conges.filter(conge =>
       conge.deduireDuSolde === true
     );
-
-
-  const cpPris =
-    congesADeduire
-      .filter(conge => conge.type === "CP")
-      .reduce(
-        (total, conge) =>
-          total + Number(conge.jours),
-        0
-      );
-
-
-  const rttPris =
-    congesADeduire
-      .filter(conge => conge.type === "RTT")
-      .reduce(
-        (total, conge) =>
-          total + Number(conge.jours),
-        0
-      );
-
-
-  /*
-   * Les soldes du bulletin de juillet
-   * constituent notre point de départ.
-   *
-   * Les anciens congés déjà présents dans
-   * le bulletin ne doivent pas être déduits.
-   *
-   * Pour un congé oublié que l'on ajoute
-   * manuellement, la case permet de le
-   * déduire malgré sa date ancienne.
-   */
-
-
-  const congesApresBulletin =
-    congesADeduire.filter(conge =>
-      new Date(conge.debut) > dateFinBulletin
-    );
-
-
-  const congesAvantOuDansBulletin =
-    congesADeduire.filter(conge =>
-      new Date(conge.debut) <= dateFinBulletin
-    );
-
-
-  /*
-   * Pour les congés antérieurs au bulletin,
-   * on ne déduit que ceux ajoutés après coup.
-   *
-   * Pour éviter de déduire tes anciens congés
-   * déjà connus, on reconnaît les congés
-   * initiaux comme déjà pris en compte.
-   */
 
 
   const clesCongesInitiaux =
@@ -185,14 +160,28 @@ function App() {
     );
 
 
+  const congesADeduireAvantBulletin =
+    congesADeduire.filter(conge => {
+
+      const cle =
+        `${conge.debut}-${conge.type}-${conge.jours}`;
+
+      return (
+        new Date(conge.debut) <= dateFinBulletin &&
+        !clesCongesInitiaux.has(cle)
+      );
+
+    });
+
+
+  const congesADeduireApresBulletin =
+    congesADeduire.filter(conge =>
+      new Date(conge.debut) > dateFinBulletin
+    );
+
+
   const cpOublies =
-    congesAvantOuDansBulletin
-      .filter(conge =>
-        conge.deduireDuSolde === true &&
-        !clesCongesInitiaux.has(
-          `${conge.debut}-${conge.type}-${conge.jours}`
-        )
-      )
+    congesADeduireAvantBulletin
       .filter(conge => conge.type === "CP")
       .reduce(
         (total, conge) =>
@@ -202,13 +191,7 @@ function App() {
 
 
   const rttOublies =
-    congesAvantOuDansBulletin
-      .filter(conge =>
-        conge.deduireDuSolde === true &&
-        !clesCongesInitiaux.has(
-          `${conge.debut}-${conge.type}-${conge.jours}`
-        )
-      )
+    congesADeduireAvantBulletin
       .filter(conge => conge.type === "RTT")
       .reduce(
         (total, conge) =>
@@ -218,7 +201,7 @@ function App() {
 
 
   const cpDepuisBulletin =
-    congesApresBulletin
+    congesADeduireApresBulletin
       .filter(conge => conge.type === "CP")
       .reduce(
         (total, conge) =>
@@ -228,7 +211,7 @@ function App() {
 
 
   const rttDepuisBulletin =
-    congesApresBulletin
+    congesADeduireApresBulletin
       .filter(conge => conge.type === "RTT")
       .reduce(
         (total, conge) =>
@@ -244,10 +227,6 @@ function App() {
   const rttTotalADeduire =
     rttOublies + rttDepuisBulletin;
 
-
-  /*
-   * CP N-1 est consommé en premier.
-   */
 
   const cpN1Depart =
     Number(bulletin.cpN1Disponible);
@@ -294,6 +273,16 @@ function App() {
     <div className="app">
 
       <Header />
+
+<MonthStatus bulletin={bulletin} />
+
+      <Bulletin
+
+        bulletin={bulletin}
+
+        onSave={enregistrerBulletin}
+
+      />
 
 
       <Dashboard
@@ -351,3 +340,5 @@ function App() {
 
 
 export default App;
+
+
