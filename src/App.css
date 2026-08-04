@@ -1,245 +1,292 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  background: #f5f7fb;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f7f5f2;
+  color: #292725;
 }
 
-
-.app {
-  max-width: 700px;
-  margin: auto;
-  padding: 25px;
-}
-
-
-h1 {
-  text-align: center;
-}
-
-
-.subtitle {
-  text-align: center;
-  color: #666;
-}
-
-
-.cards {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin: 25px 0;
-}
-
-
-.card,
-.history {
-  background: white;
-  border-radius: 20px;
-  padding: 20px;
-  margin-top: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-
-.card {
-  flex: 1;
-}
-
-
-.value {
-  font-size: 32px;
-  font-weight: bold;
-}
-
-
-button {
-  border: none;
-  border-radius: 15px;
-  padding: 12px 18px;
-  cursor: pointer;
-}
-
-
+button,
 input,
 select {
-  padding: 10px;
-  border-radius: 10px;
+  font: inherit;
+}
+
+.app {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 60px;
 }
 
 
+/* =========================
+   HEADER
+========================= */
 
-/* CALENDRIER */
+.app-header {
+  margin-bottom: 28px;
+}
 
-.calendar-month {
-  margin-top: 25px;
+.app-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.app-header p {
+  margin: 7px 0 0;
+  color: #77716c;
 }
 
 
-.weekdays,
-.calendar-grid {
+/* =========================
+   SITUATION
+========================= */
 
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+.month-status {
+  background: white;
+  border: 1px solid #ebe7e2;
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 18px rgba(50, 40, 30, 0.04);
+}
 
+.month-status strong {
+  color: #292725;
+}
+
+.month-status p {
+  margin: 7px 0 0;
+  color: #77716c;
 }
 
 
-.weekdays {
+/* =========================
+   BULLETIN
+========================= */
 
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 8px;
-
+.bulletin {
+  background: white;
+  border: 1px solid #ebe7e2;
+  border-radius: 20px;
+  padding: 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 18px rgba(50, 40, 30, 0.04);
 }
 
-
-
-.day,
-.empty-day {
-
-  min-height: 45px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-
+.bulletin h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
 }
 
-
-
-.day {
-
-  background: #f5f7fb;
-
-}
-
-
-
-.weekend {
-
-  background: #e8e8e8;
-
-}
-
-
-
-.vacation {
-
-  background: #dff3ff;
-  font-weight: bold;
-
-}
-
-
-
-.day small {
-
+.bulletin label {
+  display: inline-block;
+  margin-bottom: 7px;
+  font-weight: 600;
   font-size: 14px;
+}
 
+.bulletin input {
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ddd7d1;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #faf9f7;
+}
+
+.bulletin button {
+  border: none;
+  border-radius: 11px;
+  padding: 11px 16px;
+  background: #292725;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.bulletin button:hover {
+  opacity: 0.9;
 }
 
 
+/* =========================
+   CARTES SOLDES
+========================= */
 
-@media (max-width:600px){
-
-  .app {
-    padding:15px;
-  }
-
-
-  .day,
-  .empty-day {
-
-    min-height: 38px;
-
-  }
-
-}
-.header {
-  text-align: center;
-  margin-bottom: 25px;
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
 }
 
-.header h1 {
-  margin-bottom: 8px;
-  font-size: 2.2rem;
+.card {
+  background: white;
+  border: 1px solid #ebe7e2;
+  border-radius: 20px;
+  padding: 22px;
+  min-height: 175px;
+  box-shadow: 0 5px 20px rgba(50, 40, 30, 0.05);
 }
 
-.subtitle {
-  color: #666;
-  font-size: 1rem;
-}
-.cp {
-  background: #dff3ff;
+.card h2 {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 650;
 }
 
-.rtt {
-  background: #ffe7c2;
+.card .value {
+  font-size: 38px;
+  font-weight: 750;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
 }
 
-.legend {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 15px;
+.card p {
+  margin: 0 0 15px;
+  color: #77716c;
 }
 
-.legend-cp {
-  color: #1677ff;
+.card small {
+  color: #8b8580;
+  line-height: 1.6;
 }
 
-.legend-rtt {
-  color: #d97706;
+
+/* =========================
+   CALENDRIER
+========================= */
+
+.calendar {
+  background: white;
+  border: 1px solid #ebe7e2;
+  border-radius: 20px;
+  padding: 22px;
+  margin-bottom: 28px;
+  box-shadow: 0 5px 20px rgba(50, 40, 30, 0.05);
+  overflow-x: auto;
 }
+
+
+/* =========================
+   HISTORIQUE
+========================= */
+
+.leave-history {
+  background: white;
+  border: 1px solid #ebe7e2;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 5px 20px rgba(50, 40, 30, 0.05);
+}
+
+.leave-history h2 {
+  margin-top: 0;
+}
+
+
+/* =========================
+   MODALE
+========================= */
+
 .modal-overlay {
-
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.35);
-
+  background: rgba(30, 27, 24, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
-
+  padding: 18px;
+  z-index: 1000;
 }
-
 
 .modal {
-
+  width: min(460px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
   background: white;
-  padding: 25px;
-  border-radius: 20px;
-
-  width: 320px;
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.2);
-
-  text-align: center;
-
-}
-.history-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #ececec;
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
 }
 
-.history-item:last-child {
-  border-bottom: none;
+.modal h2 {
+  margin-top: 0;
 }
 
-.history-item button {
-  background: #ff4d4f;
-  color: white;
+.modal label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  border: 1px solid #ddd7d1;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #faf9f7;
+}
+
+.modal button {
   border: none;
-  border-radius: 8px;
-  padding: 6px 10px;
+  border-radius: 10px;
+  padding: 10px 15px;
   cursor: pointer;
+  font-weight: 600;
 }
 
-.history-item button:hover {
-  opacity: 0.9;
+.modal button:last-child {
+  background: #292725;
+  color: white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .app {
+    width: calc(100% - 20px);
+    padding-top: 18px;
+  }
+
+  .app-header h1 {
+    font-size: 27px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .card .value {
+    font-size: 34px;
+  }
+
+  .bulletin,
+  .calendar,
+  .leave-history {
+    padding: 17px;
+    border-radius: 17px;
+  }
+
+  .modal {
+    border-radius: 18px;
+    padding: 20px;
+  }
+
 }
