@@ -214,13 +214,20 @@ function Calendar({
 
 
                   {conge && (
-                    <small>
-                      {conge.type === "CP"
-                        ? "🏖️"
-                        : "⏰"
-                      }
-                    </small>
-                  )}
+  <small>
+    {conge.type === "CP"
+      ? "🏖️"
+      : "⏰"
+    }
+
+    {conge.jours === 0.5 && (
+      conge.moment === "matin"
+        ? " 🌅"
+        : " 🌇"
+    )}
+
+  </small>
+)}
 
                 </div>
 
