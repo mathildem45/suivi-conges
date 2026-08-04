@@ -13,6 +13,10 @@ function AddLeaveModal({
   const [duree, setDuree] = useState("1");
   const [moment, setMoment] = useState("matin");
 
+  const [deduireDuSolde, setDeduireDuSolde] =
+    useState(true);
+
+
   function enregistrer() {
 
     onSave({
@@ -21,16 +25,20 @@ function AddLeaveModal({
       fin: dateFin,
       type,
       jours: Number(duree),
+
       moment:
         duree === "0.5"
           ? moment
-          : null
+          : null,
+
+      deduireDuSolde
 
     });
 
     onClose();
 
   }
+
 
   return (
 
@@ -39,6 +47,7 @@ function AddLeaveModal({
       <div className="modal">
 
         <h2>📅 Ajouter un congé</h2>
+
 
         <label>
           Date de début
@@ -54,8 +63,10 @@ function AddLeaveModal({
           }
         />
 
+
         <br />
         <br />
+
 
         <label>
           Date de fin
@@ -71,8 +82,10 @@ function AddLeaveModal({
           }
         />
 
+
         <br />
         <br />
+
 
         <label>
           Type
@@ -97,8 +110,10 @@ function AddLeaveModal({
 
         </select>
 
+
         <br />
         <br />
+
 
         <label>
           Durée
@@ -123,7 +138,9 @@ function AddLeaveModal({
 
         </select>
 
+
         {duree === "0.5" && (
+
           <>
             <br />
             <br />
@@ -140,6 +157,7 @@ function AddLeaveModal({
                 setMoment(e.target.value)
               }
             >
+
               <option value="matin">
                 🌅 Matin
               </option>
@@ -147,12 +165,37 @@ function AddLeaveModal({
               <option value="apres-midi">
                 🌇 Après-midi
               </option>
+
             </select>
+
           </>
+
         )}
+
 
         <br />
         <br />
+
+
+        <label>
+
+          <input
+            type="checkbox"
+            checked={deduireDuSolde}
+            onChange={(e) =>
+              setDeduireDuSolde(e.target.checked)
+            }
+          />
+
+          {" "}
+          Déduire du solde actuel
+
+        </label>
+
+
+        <br />
+        <br />
+
 
         <button onClick={onClose}>
           Annuler
@@ -164,6 +207,7 @@ function AddLeaveModal({
           Enregistrer
         </button>
 
+
       </div>
 
     </div>
@@ -171,5 +215,6 @@ function AddLeaveModal({
   );
 
 }
+
 
 export default AddLeaveModal;

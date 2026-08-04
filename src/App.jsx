@@ -58,7 +58,10 @@ function App() {
 
       jours: nouveauConge.jours,
 
-      moment: nouveauConge.moment
+      moment: nouveauConge.moment,
+
+      deduireDuSolde:
+        nouveauConge.deduireDuSolde
 
     }));
 
@@ -100,49 +103,190 @@ function App() {
   }
 
 
-  /*
-   * ==========================================
-   * DERNIER BULLETIN CONNU
-   * ==========================================
-   */
-
   const bulletin =
     settings.dernierBulletin;
 
 
+  const dateFinBulletin =
+    new Date(bulletin.dateFin);
+
+
   /*
-   * CP N-1
-   *
-   * 9 acquis - 6 pris = 3 disponibles
+   * On ne déduit que les congés explicitement
+   * marqués comme devant être déduits.
    */
+
+  const congesADeduire =
+    conges.filter(conge =>
+      conge.deduireDuSolde === true
+    );
+
+
+  const cpPris =
+    congesADeduire
+      .filter(conge => conge.type === "CP")
+      .reduce(
+        (total, conge) =>
+          total + Number(conge.jours),
+        0
+      );
+
+
+  const rttPris =
+    congesADeduire
+      .filter(conge => conge.type === "RTT")
+      .reduce(
+        (total, conge) =>
+          total + Number(conge.jours),
+        0
+      );
+
+
+  /*
+   * Les soldes du bulletin de juillet
+   * constituent notre point de départ.
+   *
+   * Les anciens congés déjà présents dans
+   * le bulletin ne doivent pas être déduits.
+   *
+   * Pour un congé oublié que l'on ajoute
+   * manuellement, la case permet de le
+   * déduire malgré sa date ancienne.
+   */
+
+
+  const congesApresBulletin =
+    congesADeduire.filter(conge =>
+      new Date(conge.debut) > dateFinBulletin
+    );
+
+
+  const congesAvantOuDansBulletin =
+    congesADeduire.filter(conge =>
+      new Date(conge.debut) <= dateFinBulletin
+    );
+
+
+  /*
+   * Pour les congés antérieurs au bulletin,
+   * on ne déduit que ceux ajoutés après coup.
+   *
+   * Pour éviter de déduire tes anciens congés
+   * déjà connus, on reconnaît les congés
+   * initiaux comme déjà pris en compte.
+   */
+
+
+  const clesCongesInitiaux =
+    new Set(
+      congesInitiaux.map(conge =>
+        `${conge.debut}-${conge.type}-${conge.jours}`
+      )
+    );
+
+
+  const cpOublies =
+    congesAvantOuDansBulletin
+      .filter(conge =>
+        conge.deduireDuSolde === true &&
+        !clesCongesInitiaux.has(
+          `${conge.debut}-${conge.type}-${conge.jours}`
+        )
+      )
+      .filter(conge => conge.type === "CP")
+      .reduce(
+        (total, conge) =>
+          total + Number(conge.jours),
+        0
+      );
+
+
+  const rttOublies =
+    congesAvantOuDansBulletin
+      .filter(conge =>
+        conge.deduireDuSolde === true &&
+        !clesCongesInitiaux.has(
+          `${conge.debut}-${conge.type}-${conge.jours}`
+        )
+      )
+      .filter(conge => conge.type === "RTT")
+      .reduce(
+        (total, conge) =>
+          total + Number(conge.jours),
+        0
+      );
+
+
+  const cpDepuisBulletin =
+    congesApresBulletin
+      .filter(conge => conge.type === "CP")
+      .reduce(
+        (total, conge) =>
+          total + Number(conge.jours),
+        0
+      );
+
+
+  const rttDepuisBulletin =
+    congesApresBulletin
+      .filter(conge => conge.type === "RTT")
+      .reduce(
+        (total, conge) =>
+          total + Number(conge.jours),
+        0
+      );
+
+
+  const cpTotalADeduire =
+    cpOublies + cpDepuisBulletin;
+
+
+  const rttTotalADeduire =
+    rttOublies + rttDepuisBulletin;
+
+
+  /*
+   * CP N-1 est consommé en premier.
+   */
+
+  const cpN1Depart =
+    Number(bulletin.cpN1Disponible);
+
+
+  const cpNDepart =
+    Number(bulletin.cpNDisponible);
+
+
+  const rttDepart =
+    Number(bulletin.rttDisponible);
+
 
   const cpN1Disponible =
-    Number(bulletin.cpN1Acquis) -
-    Number(bulletin.cpN1Pris);
+    Math.max(
+      0,
+      cpN1Depart - cpTotalADeduire
+    );
 
 
-  /*
-   * CP N
-   *
-   * Le bulletin de juillet indique 4,17.
-   *
-   * On ne retire PAS les anciens congés,
-   * car ils sont déjà pris en compte
-   * dans le bulletin.
-   */
+  const surplusCP =
+    Math.max(
+      0,
+      cpTotalADeduire - cpN1Depart
+    );
+
 
   const cpNDisponible =
-    Number(bulletin.cpNAcquis);
+    Math.max(
+      0,
+      cpNDepart - surplusCP
+    );
 
-
-  /*
-   * RTT
-   *
-   * Le bulletin indique 2,95.
-   */
 
   const rttDisponible =
-    Number(bulletin.rttAcquis);
+    Math.max(
+      0,
+      rttDepart - rttTotalADeduire
+    );
 
 
   return (

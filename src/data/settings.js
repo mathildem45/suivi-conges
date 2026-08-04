@@ -5,12 +5,9 @@ export const settings = {
     mois: "2026-07",
     dateFin: "2026-07-31",
 
-    cpN1Acquis: 9,
-    cpN1Pris: 6,
-
-    cpNAcquis: 4.17,
-
-    rttAcquis: 2.95
+    cpN1Disponible: 3,
+    cpNDisponible: 4.17,
+    rttDisponible: 2.95
   },
 
   lundiPentecoteTravaille: true
