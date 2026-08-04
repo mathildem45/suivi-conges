@@ -1,11 +1,17 @@
 export const settings = {
   dateEntree: "2026-02-02",
 
-  // Situation connue au 31 juillet 2026
-  cpAcquis: 9,
-  cpPris: 6,
+  dernierBulletin: {
+    mois: "2026-07",
+    dateFin: "2026-07-31",
 
-  rttAcquis: 2.95,
+    cpN1Acquis: 9,
+    cpN1Pris: 6,
+
+    cpNAcquis: 4.17,
+
+    rttAcquis: 2.95
+  },
 
   lundiPentecoteTravaille: true
 };

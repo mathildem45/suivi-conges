@@ -15,7 +15,6 @@ import "./App.css";
 
 function App() {
 
-
   const [conges, setConges] = useState(() => {
 
     const sauvegarde =
@@ -28,10 +27,8 @@ function App() {
   });
 
 
-
   const [dateSelectionnee, setDateSelectionnee] =
     useState(null);
-
 
 
   useEffect(() => {
@@ -44,16 +41,12 @@ function App() {
   }, [conges]);
 
 
-
-
   function ajouterConge(nouveauConge) {
-
 
     const dates = getDatesBetween(
       nouveauConge.debut,
       nouveauConge.fin
     );
-
 
 
     const nouveauxConges = dates.map(date => ({
@@ -70,24 +63,19 @@ function App() {
     }));
 
 
-
     setConges([
       ...conges,
       ...nouveauxConges
     ]);
 
-
   }
-
-
 
 
   function supprimerConge(congeASupprimer) {
 
-
     const confirmation =
       window.confirm(
-        "Supprimer ce congé ?"
+        "Supprimer cette période de congé ?"
       );
 
 
@@ -96,67 +84,83 @@ function App() {
     }
 
 
-
     setConges(
       conges.filter(
         c =>
-          c.debut !== congeASupprimer.debut
+          !(
+            c.type === congeASupprimer.type &&
+            new Date(c.debut) >=
+              new Date(congeASupprimer.debut) &&
+            new Date(c.debut) <=
+              new Date(congeASupprimer.fin)
+          )
       )
     );
-
 
   }
 
 
+  /*
+   * ==========================================
+   * DERNIER BULLETIN CONNU
+   * ==========================================
+   */
+
+  const bulletin =
+    settings.dernierBulletin;
 
 
+  /*
+   * CP N-1
+   *
+   * 9 acquis - 6 pris = 3 disponibles
+   */
 
-  const cpPris =
-    conges
-      .filter(c => c.type === "CP")
-      .reduce(
-        (total, c) =>
-          total + c.jours,
-        0
-      );
-
-
-
-  const rttPris =
-    conges
-      .filter(c => c.type === "RTT")
-      .reduce(
-        (total, c) =>
-          total + c.jours,
-        0
-      );
+  const cpN1Disponible =
+    Number(bulletin.cpN1Acquis) -
+    Number(bulletin.cpN1Pris);
 
 
+  /*
+   * CP N
+   *
+   * Le bulletin de juillet indique 4,17.
+   *
+   * On ne retire PAS les anciens congés,
+   * car ils sont déjà pris en compte
+   * dans le bulletin.
+   */
 
+  const cpNDisponible =
+    Number(bulletin.cpNAcquis);
+
+
+  /*
+   * RTT
+   *
+   * Le bulletin indique 2,95.
+   */
+
+  const rttDisponible =
+    Number(bulletin.rttAcquis);
 
 
   return (
 
     <div className="app">
 
-
       <Header />
-
 
 
       <Dashboard
 
-        cpAcquis={settings.cpAcquis}
+        cpN1Disponible={cpN1Disponible}
 
-        cpPris={cpPris}
+        cpNDisponible={cpNDisponible}
 
-        rttAcquis={settings.rttAcquis}
-
-        rttPris={rttPris}
+        rttDisponible={rttDisponible}
 
       />
-
-
 
 
       <Calendar
@@ -170,8 +174,6 @@ function App() {
       />
 
 
-
-
       <LeaveHistory
 
         conges={conges}
@@ -179,9 +181,6 @@ function App() {
         onDelete={supprimerConge}
 
       />
-
-
-
 
 
       {dateSelectionnee && (
@@ -200,14 +199,11 @@ function App() {
 
       )}
 
-
-
     </div>
 
   );
 
 }
-
 
 
 export default App;

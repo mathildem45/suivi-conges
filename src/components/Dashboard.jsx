@@ -1,131 +1,72 @@
 function Dashboard({
-  cpAcquis = 0,
-  cpPris = 0,
-  rttAcquis = 0,
-  rttPris = 0,
+  cpN1Disponible = 0,
+  cpNDisponible = 0,
+  rttDisponible = 0
 }) {
 
-
   function afficherNombre(nombre) {
-
     const valeur = Number(nombre);
 
     return valeur % 1 === 0
       ? valeur
-      : valeur.toFixed(1);
-
+      : valeur.toFixed(2);
   }
-
-
 
   function afficherJour(nombre) {
-
-    return nombre > 1
+    return Number(nombre) > 1
       ? "jours"
       : "jour";
-
   }
 
-
-
-
-  const cpRestants =
-    Number(cpAcquis) - Number(cpPris);
-
-
-
-  const rttRestants =
-    Number(rttAcquis) - Number(rttPris);
-
-
-
-
   return (
-
     <div className="cards">
 
-
       <div className="card">
 
-
-        <h2>
-          🏖️ Congés payés
-        </h2>
-
-
+        <h2>🏖️ CP N-1</h2>
 
         <div className="value">
-
-          {afficherNombre(cpRestants)}
-
+          {afficherNombre(cpN1Disponible)}
         </div>
 
-
         <p>
-          {afficherJour(cpRestants)} disponibles
+          {afficherJour(cpN1Disponible)} disponibles
         </p>
-
-
-
-        <small>
-
-          Acquis : {afficherNombre(cpAcquis)} jours
-
-          <br />
-
-          Pris : {afficherNombre(cpPris)} jours
-
-        </small>
-
 
       </div>
 
 
-
-
-
       <div className="card">
 
-
-        <h2>
-          ⏰ RTT
-        </h2>
-
-
+        <h2>🏖️ CP N</h2>
 
         <div className="value">
-
-          {afficherNombre(rttRestants)}
-
+          {afficherNombre(cpNDisponible)}
         </div>
 
-
         <p>
-          {afficherJour(rttRestants)} disponibles
+          {afficherJour(cpNDisponible)} disponibles
         </p>
-
-
-
-        <small>
-
-          Acquis : {afficherNombre(rttAcquis)} jours
-
-          <br />
-
-          Pris : {afficherNombre(rttPris)} jours
-
-        </small>
-
 
       </div>
 
 
+      <div className="card">
+
+        <h2>⏰ RTT</h2>
+
+        <div className="value">
+          {afficherNombre(rttDisponible)}
+        </div>
+
+        <p>
+          {afficherJour(rttDisponible)} disponibles
+        </p>
+
+      </div>
 
     </div>
-
   );
-
 }
-
 
 export default Dashboard;
