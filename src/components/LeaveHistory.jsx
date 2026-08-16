@@ -1,8 +1,8 @@
+
 function LeaveHistory({
   conges,
   onDelete
 }) {
-
 
   function formaterDate(date) {
 
@@ -11,6 +11,24 @@ function LeaveHistory({
 
   }
 
+
+  function afficherMoment(conge) {
+
+    if (!conge.moment) {
+      return "";
+    }
+
+    if (conge.moment === "matin") {
+      return "🌅 Matin";
+    }
+
+    if (conge.moment === "apres-midi") {
+      return "🌇 Après-midi";
+    }
+
+    return "";
+
+  }
 
 
   function regrouperConges() {
@@ -22,10 +40,10 @@ function LeaveHistory({
       conges
         .slice()
         .sort(
-          (a,b) =>
-            new Date(a.debut) - new Date(b.debut)
+          (a, b) =>
+            new Date(a.debut) -
+            new Date(b.debut)
         );
-
 
 
     tries.forEach(conge => {
@@ -34,17 +52,34 @@ function LeaveHistory({
         groupes[groupes.length - 1];
 
 
+      const datesConsecutives =
+        dernier &&
+        new Date(conge.debut) -
+        new Date(dernier.fin) === 86400000;
+
+
+      const memeType =
+        dernier &&
+        dernier.type === conge.type;
+
+
+      const memeMoment =
+        dernier &&
+        dernier.moment === conge.moment;
+
 
       if (
         dernier &&
-        dernier.type === conge.type &&
-        dernier.jours === conge.jours &&
-        new Date(conge.debut) -
-        new Date(dernier.fin) === 86400000
+        memeType &&
+        memeMoment &&
+        datesConsecutives
       ) {
 
         dernier.fin = conge.fin;
-        dernier.total += conge.jours;
+
+        dernier.total =
+          Number(dernier.total) +
+          Number(conge.jours);
 
       } else {
 
@@ -54,7 +89,7 @@ function LeaveHistory({
 
           fin: conge.fin,
 
-          total: conge.jours
+          total: Number(conge.jours)
 
         });
 
@@ -68,21 +103,17 @@ function LeaveHistory({
   }
 
 
-
-
-  const groupes = regrouperConges();
-
+  const groupes =
+    regrouperConges();
 
 
   return (
 
     <div className="card">
 
-
       <h2>
         📋 Historique des congés
       </h2>
-
 
 
       {groupes.length === 0 ? (
@@ -91,18 +122,14 @@ function LeaveHistory({
           Aucun congé enregistré
         </p>
 
-
       ) : (
 
-
         groupes.map((conge, index) => (
-
 
           <div
             key={index}
             className="history-item"
           >
-
 
             <span>
 
@@ -128,12 +155,24 @@ function LeaveHistory({
               <br />
 
 
-              ⏱️ {conge.total} jour
-              {conge.total > 1 ? "s" : ""}
+              ⏱️{" "}
+              {conge.total}{" "}
+              {conge.total > 1
+                ? "jours"
+                : "jour"
+              }
 
+
+              {afficherMoment(conge) && (
+
+                <>
+                  {" • "}
+                  {afficherMoment(conge)}
+                </>
+
+              )}
 
             </span>
-
 
 
             <button
@@ -144,14 +183,11 @@ function LeaveHistory({
               🗑️
             </button>
 
-
           </div>
-
 
         ))
 
       )}
-
 
     </div>
 

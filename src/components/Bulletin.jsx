@@ -20,23 +20,39 @@ function Bulletin({
 
   function enregistrer() {
 
-    onSave({
+    const dernierJour =
+  new Date(
+    Number(mois.substring(0, 4)),
+    Number(mois.substring(5, 7)),
+    0
+  );
 
-      mois,
+const dateFin =
+  `${dernierJour.getFullYear()}-${String(
+    dernierJour.getMonth() + 1
+  ).padStart(2, "0")}-${String(
+    dernierJour.getDate()
+  ).padStart(2, "0")}`;
 
-      dateFin:
-        `${mois}-01`,
 
-      cpN1Disponible:
-        Number(cpN1),
+onSave({
 
-      cpNDisponible:
-        Number(cpN),
+  mois,
 
-      rttDisponible:
-        Number(rtt)
+  dateFin,
 
-    });
+  cpN1Disponible:
+    Number(cpN1),
+
+  cpNDisponible:
+    Number(cpN),
+
+  rttDisponible:
+    Number(rtt)
+
+});
+
+    
 
   }
 

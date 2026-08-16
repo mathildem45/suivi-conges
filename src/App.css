@@ -290,3 +290,1352 @@ select {
   }
 
 }
+/* =========================
+   CALENDRIER — NOUVEAU DESIGN
+========================= */
+
+.calendar-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.calendar-title h2 {
+  margin: 0;
+  font-size: 22px;
+  color: #292725;
+}
+
+.calendar-title p {
+  margin: 5px 0 0;
+  color: #8b8580;
+  font-size: 13px;
+}
+
+
+/* Navigation du mois */
+
+.calendar-navigation {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.calendar-navigation h3 {
+  text-align: center;
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  color: #292725;
+  text-transform: capitalize;
+}
+
+.calendar-nav-button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid #e5dfd9;
+  background: #faf9f7;
+  border-radius: 14px;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  color: #292725;
+  transition: 0.15s ease;
+}
+
+.calendar-nav-button:hover {
+  background: #eeeae5;
+  transform: scale(1.03);
+}
+
+.calendar-nav-button:disabled {
+  opacity: 0.25;
+  cursor: default;
+  transform: none;
+}
+
+
+/* Jours de la semaine */
+
+.weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.weekdays {
+  margin-bottom: 7px;
+}
+
+.weekdays div {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #8b8580;
+  padding: 7px 0;
+  text-transform: uppercase;
+}
+
+
+/* Cases */
+
+.day,
+.empty-day {
+  min-height: 68px;
+}
+
+.day {
+  position: relative;
+  border: 1px solid #eee9e4;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 9px;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.day:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(50, 40, 30, 0.10);
+  border-color: #d8d1ca;
+}
+
+.day.weekend {
+  background: #faf8f6;
+}
+
+.day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 650;
+  color: #373431;
+}
+
+
+/* Congés */
+
+.leave-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  margin-top: 7px;
+  font-size: 16px;
+}
+
+
+/* CP */
+
+.day.cp {
+  background: #fff4ef;
+  border-color: #e8cfc4;
+}
+
+.day.cp .day-number {
+  color: #8c4f3c;
+}
+
+
+/* RTT */
+
+.day.rtt {
+  background: #f1f5fa;
+  border-color: #d2ddea;
+}
+
+.day.rtt .day-number {
+  color: #4d6480;
+}
+
+
+/* Légende */
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #eee9e4;
+  color: #77716c;
+  font-size: 13px;
+}
+
+.calendar-legend span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calendar-legend i {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 4px;
+}
+
+.legend-cp {
+  background: #d9b9aa;
+}
+
+.legend-rtt {
+  background: #aebed2;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .calendar-title {
+    align-items: flex-start;
+  }
+
+  .calendar-title h2 {
+    font-size: 19px;
+  }
+
+  .calendar-navigation {
+    grid-template-columns: 40px 1fr 40px;
+    gap: 8px;
+  }
+
+  .calendar-navigation h3 {
+    font-size: 18px;
+  }
+
+  .calendar-nav-button {
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+  }
+
+  .weekdays,
+  .calendar-grid {
+    gap: 5px;
+  }
+
+  .day,
+  .empty-day {
+    min-height: 58px;
+  }
+
+  .day {
+    padding: 6px;
+    border-radius: 10px;
+  }
+
+  .day-number {
+    font-size: 13px;
+  }
+
+  .leave-icon {
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+}
+/* =========================
+   CALENDRIER MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .calendar-title h2 {
+    font-size: 19px;
+  }
+
+  .calendar-title p {
+    font-size: 12px;
+  }
+
+  .calendar-navigation {
+    grid-template-columns: 38px 1fr 38px;
+  }
+
+  .calendar-nav-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .weekdays,
+  .calendar-grid {
+    gap: 4px;
+  }
+
+  .weekdays div {
+    font-size: 11px;
+  }
+
+  .day,
+  .empty-day {
+    min-height: 54px;
+  }
+
+  .day {
+    padding: 6px;
+    border-radius: 9px;
+  }
+
+  .day-number {
+    font-size: 13px;
+  }
+
+  .leave-icon {
+    font-size: 13px;
+  }
+
+  .calendar-legend {
+    gap: 10px;
+    font-size: 12px;
+  }
+
+}
+/* =========================
+   MODE SOMBRE
+========================= */
+
+/* =========================================
+   MODE SOMBRE
+========================================= */
+
+@media (prefers-color-scheme: dark) {
+
+  body {
+    background: #171615;
+    color: #f3f0ed;
+  }
+
+  /* =========================
+     CARTES PRINCIPALES
+  ========================= */
+
+  .month-status,
+  .bulletin,
+  .card,
+  .calendar,
+  .leave-history,
+  .monthly-summary {
+    background: #242220;
+    border-color: #3a3734;
+    color: #f3f0ed;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .app-header p,
+  .month-status p,
+  .calendar-title p,
+  .card p {
+    color: #aaa39d;
+  }
+
+  .month-status strong,
+  .bulletin h2,
+  .card h2,
+  .calendar-title h2,
+  .calendar-navigation h3,
+  .leave-history h2 {
+    color: #f3f0ed;
+  }
+
+  .card small {
+    color: #aaa39d;
+  }
+
+  /* =========================
+     BULLETIN
+  ========================= */
+
+  .bulletin label {
+    color: #e8e3de;
+  }
+
+  .bulletin input {
+    background: #302d2a;
+    border-color: #4a4642;
+    color: #f3f0ed;
+  }
+
+  .bulletin button {
+    background: #f3f0ed;
+    color: #292725;
+  }
+
+  /* =========================
+     CALENDRIER
+  ========================= */
+
+  .calendar {
+    background: #1e1f24;
+  }
+
+  .calendar-title h2,
+  .calendar-navigation h3 {
+    color: #ffffff;
+  }
+
+  .calendar-title p {
+    color: #b8bbc4;
+  }
+
+  .calendar-nav-button {
+    background: #2b2d33;
+    border-color: #40424a;
+    color: #ffffff;
+  }
+
+  .calendar-nav-button:hover {
+    background: #363941;
+  }
+
+  .weekdays div {
+    color: #9fa4ae;
+  }
+
+  /* CASES DU CALENDRIER */
+
+  .day {
+    background: #2a2c32;
+    border-color: #3b3e46;
+    color: #ffffff;
+  }
+
+  .day:hover {
+    background: #33353d;
+    border-color: #555861;
+  }
+
+  .day.weekend {
+    background: #25272d;
+  }
+
+  /* NUMÉROS DES JOURS */
+  .day-number {
+    color: #ffffff !important;
+  }
+
+  /* CP */
+  .day.cp {
+    background: #4a352d;
+    border-color: #7c5a4d;
+  }
+
+  .day.cp .day-number {
+    color: #ffd9ca !important;
+  }
+
+  /* RTT */
+  .day.rtt {
+    background: #2c3c50;
+    border-color: #4d6886;
+  }
+
+  .day.rtt .day-number {
+    color: #d8e9ff !important;
+  }
+
+  .empty-day {
+    background: transparent;
+  }
+
+  .calendar-legend {
+    border-top-color: #3c3f46;
+    color: #b8bbc4;
+  }
+
+  .legend-cp {
+    background: #c18b75;
+  }
+
+  .legend-rtt {
+    background: #78a2cf;
+  }
+
+  /* =========================
+     SUIVI DEPUIS LE DERNIER BILAN
+  ========================= */
+
+  .monthly-summary {
+    background: #1e1f24 !important;
+    border-color: #34363d !important;
+    color: #f5f5f7;
+  }
+
+  .monthly-summary-header h2 {
+    color: #ffffff !important;
+  }
+
+  .monthly-summary-header p {
+    color: #aeb0b8 !important;
+  }
+
+  .current-month {
+    background: #272930 !important;
+    border-color: #3a3c44 !important;
+  }
+
+  .current-month strong {
+    color: #ffffff !important;
+  }
+
+  .current-month span {
+    color: #b5b7c0 !important;
+  }
+
+  .summary-section {
+    background: #24262c !important;
+    border-color: #383a42 !important;
+  }
+
+  .summary-section h3 {
+    color: #ffffff !important;
+  }
+
+  .summary-line {
+    color: #c5c7ce !important;
+  }
+
+  .summary-line strong {
+    color: #f1f1f3 !important;
+  }
+
+  .summary-line.positive strong {
+    color: #72d69a !important;
+  }
+
+  .summary-line.negative strong {
+    color: #ff8585 !important;
+  }
+
+  .summary-total {
+    border-top-color: #3b3d45 !important;
+  }
+
+  .summary-total span,
+  .summary-total strong {
+    color: #ffffff !important;
+  }
+
+  .summary-forecast {
+    background: #2b2638 !important;
+    border-color: #4a4162 !important;
+  }
+
+  .summary-forecast span {
+    color: #c5b7ed !important;
+  }
+
+  .summary-forecast strong {
+    color: #ddd2ff !important;
+  }
+
+  .summary-forecast small {
+    color: #aaa0c4 !important;
+  }
+
+  .monthly-summary-note {
+    background: #292b31 !important;
+    color: #bfc1c8 !important;
+  }
+
+  /* =========================
+     PROCHAIN CONGÉ
+  ========================= */
+
+  .next-leave-date {
+    color: #ffffff !important;
+  }
+
+  .next-leave-card p {
+    color: #b8bbc4 !important;
+  }
+
+  .next-leave-type {
+    background: #4a352d;
+    color: #ffd9ca;
+  }
+
+  /* =========================
+     MODALE
+  ========================= */
+
+  .modal {
+    background: #242220;
+    color: #f3f0ed;
+  }
+
+  .modal label {
+    color: #e8e3de;
+  }
+
+  .modal input,
+  .modal select {
+    background: #302d2a;
+    border-color: #4a4642;
+    color: #f3f0ed;
+  }
+
+  .modal button:first-of-type {
+    background: #302d2a;
+    color: #f3f0ed;
+  }
+
+  .modal-overlay {
+    background: rgba(0, 0, 0, 0.65);
+  }
+
+}
+/* =========================================
+   SUIVI BULLETIN — MODE CLAIR
+   ========================================= */
+
+.monthly-summary {
+  margin-top: 24px;
+  padding: 28px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid #e8e8ee;
+  box-shadow: 0 10px 30px rgba(30, 30, 50, 0.06);
+}
+
+.monthly-summary-header {
+  margin-bottom: 20px;
+}
+
+.monthly-summary-header h2 {
+  margin: 0;
+  font-size: 22px;
+  color: #202124;
+}
+
+.monthly-summary-header p {
+  margin: 6px 0 0;
+  color: #777985;
+  font-size: 14px;
+}
+
+
+/* Mois en cours */
+
+.current-month {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+  border-radius: 16px;
+  background: #f6f7fb;
+  border: 1px solid #e7e8ef;
+}
+
+.current-month strong {
+  color: #202124;
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.current-month span {
+  font-size: 13px;
+  color: #777985;
+}
+
+
+/* Sections CP / RTT */
+
+.summary-section {
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid #e8e8ee;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.summary-section h3 {
+  margin: 0 0 16px;
+  font-size: 17px;
+  color: #202124;
+}
+
+
+/* Lignes */
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  color: #5f6368;
+  font-size: 14px;
+}
+
+.summary-line strong {
+  font-size: 15px;
+  color: #303134;
+}
+
+.summary-line.positive strong {
+  color: #247a4b;
+}
+
+.summary-line.negative strong {
+  color: #c94b4b;
+}
+
+
+/* Solde actuel */
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #eeeeF2;
+}
+
+.summary-total span {
+  font-weight: 600;
+  color: #303134;
+}
+
+.summary-total strong {
+  font-size: 24px;
+  font-weight: 700;
+  color: #202124;
+}
+
+
+/* Prévision */
+
+.summary-forecast {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4px 12px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f8f5ff;
+  border: 1px solid #ebe4ff;
+}
+
+.summary-forecast span {
+  color: #62558c;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.summary-forecast strong {
+  color: #57458c;
+  font-size: 19px;
+}
+
+.summary-forecast small {
+  grid-column: 1 / -1;
+  color: #8176a2;
+  font-size: 12px;
+}
+
+
+/* Note */
+
+.monthly-summary-note {
+  margin-top: 18px;
+  padding: 13px 16px;
+  border-radius: 14px;
+  background: #f8f9fb;
+  color: #70737c;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .monthly-summary {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .current-month {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .summary-section {
+    padding: 16px;
+  }
+
+  .summary-total strong {
+    font-size: 22px;
+  }
+
+}
+/* =========================================
+   SUIVI BULLETIN — MODE SOMBRE
+   ========================================= */
+
+body.dark .monthly-summary,
+.dark .monthly-summary {
+  background: #1e1f24;
+  border-color: #34363d;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+body.dark .monthly-summary-header h2,
+.dark .monthly-summary-header h2 {
+  color: #f5f5f7;
+}
+
+body.dark .monthly-summary-header p,
+.dark .monthly-summary-header p {
+  color: #aeb0b8;
+}
+
+
+/* Mois en cours */
+
+body.dark .current-month,
+.dark .current-month {
+  background: #272930;
+  border-color: #3a3c44;
+}
+
+body.dark .current-month strong,
+.dark .current-month strong {
+  color: #ffffff;
+}
+
+body.dark .current-month span,
+.dark .current-month span {
+  color: #b5b7c0;
+}
+
+
+/* Sections */
+
+body.dark .summary-section,
+.dark .summary-section {
+  background: #24262c;
+  border-color: #383a42;
+}
+
+body.dark .summary-section h3,
+.dark .summary-section h3 {
+  color: #ffffff;
+}
+
+
+/* Lignes */
+
+body.dark .summary-line,
+.dark .summary-line {
+  color: #c5c7ce;
+}
+
+body.dark .summary-line strong,
+.dark .summary-line strong {
+  color: #f1f1f3;
+}
+
+body.dark .summary-line.positive strong,
+.dark .summary-line.positive strong {
+  color: #72d69a;
+}
+
+body.dark .summary-line.negative strong,
+.dark .summary-line.negative strong {
+  color: #ff8585;
+}
+
+
+/* Solde actuel */
+
+body.dark .summary-total,
+.dark .summary-total {
+  border-top-color: #3b3d45;
+}
+
+body.dark .summary-total span,
+.dark .summary-total span {
+  color: #f1f1f3;
+}
+
+body.dark .summary-total strong,
+.dark .summary-total strong {
+  color: #ffffff;
+}
+
+
+/* Prévision */
+
+body.dark .summary-forecast,
+.dark .summary-forecast {
+  background: #2b2638;
+  border-color: #4a4162;
+}
+
+body.dark .summary-forecast span,
+.dark .summary-forecast span {
+  color: #c5b7ed;
+}
+
+body.dark .summary-forecast strong,
+.dark .summary-forecast strong {
+  color: #ddd2ff;
+}
+
+body.dark .summary-forecast small,
+.dark .summary-forecast small {
+  color: #aaa0c4;
+}
+
+
+/* Note */
+
+body.dark .monthly-summary-note,
+.dark .monthly-summary-note {
+  background: #292b31;
+  color: #bfc1c8;
+}
+/* =========================================
+   CALENDRIER — MODE SOMBRE
+========================================= */
+
+body.dark .calendar,
+.dark .calendar {
+  background: #1e1f24;
+  border-color: #34363d;
+  box-shadow: 0 10px 30px rgba(0,0,0,.28);
+}
+
+body.dark .calendar-title h2,
+body.dark .calendar-navigation h3,
+.dark .calendar-title h2,
+.dark .calendar-navigation h3 {
+  color: #ffffff;
+}
+
+body.dark .calendar-title p,
+.dark .calendar-title p {
+  color: #b8bbc4;
+}
+
+
+/* Navigation */
+
+body.dark .calendar-nav-button,
+.dark .calendar-nav-button {
+  background: #2b2d33;
+  border-color: #40424a;
+  color: #ffffff;
+}
+
+body.dark .calendar-nav-button:hover,
+.dark .calendar-nav-button:hover {
+  background: #363941;
+}
+
+
+/* Jours */
+
+body.dark .weekdays div,
+.dark .weekdays div {
+  color: #9fa4ae;
+}
+
+body.dark .day,
+.dark .day {
+  background: #2a2c32;
+  border-color: #3b3e46;
+}
+
+body.dark .day:hover,
+.dark .day:hover {
+  background: #33353d;
+  border-color: #555861;
+  box-shadow: 0 8px 18px rgba(0,0,0,.30);
+}
+
+body.dark .day.weekend,
+.dark .day.weekend {
+  background: #25272d;
+}
+
+body.dark .day-number,
+.dark .day-number {
+  color: #f5f5f5;
+}
+
+
+/* CP */
+
+body.dark .day.cp,
+.dark .day.cp {
+  background: #4a352d;
+  border-color: #7c5a4d;
+}
+
+body.dark .day.cp .day-number,
+.dark .day.cp .day-number {
+  color: #ffd9ca;
+}
+
+
+/* RTT */
+
+body.dark .day.rtt,
+.dark .day.rtt {
+  background: #2c3c50;
+  border-color: #4d6886;
+}
+
+body.dark .day.rtt .day-number,
+.dark .day.rtt .day-number {
+  color: #d8e9ff;
+}
+
+
+/* Légende */
+
+body.dark .calendar-legend,
+.dark .calendar-legend {
+  border-top-color: #3c3f46;
+  color: #b8bbc4;
+}
+
+body.dark .legend-cp,
+.dark .legend-cp {
+  background: #c18b75;
+}
+
+body.dark .legend-rtt,
+.dark .legend-rtt {
+  background: #78a2cf;
+}
+/* =========================================
+   CARTE — PROCHAIN CONGÉ
+========================================= */
+
+.next-leave-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.next-leave-card h2 {
+  margin-bottom: 10px;
+}
+
+.next-leave-date {
+  margin-top: 4px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #292725;
+}
+
+.next-leave-card p {
+  margin: 8px 0 10px;
+  color: #77716c;
+  font-size: 14px;
+}
+
+.next-leave-type {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: #f8eee9;
+  color: #8c4f3c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* Mode sombre */
+
+body.dark .next-leave-date,
+.dark .next-leave-date {
+  color: #ffffff;
+}
+
+body.dark .next-leave-card p,
+.dark .next-leave-card p {
+  color: #b8bbc4;
+}
+
+body.dark .next-leave-type,
+.dark .next-leave-type {
+  background: #4a352d;
+  color: #ffd9ca;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .next-leave-date {
+    font-size: 21px;
+  }
+
+}
+
+/* ============================================================
+   📱 VERSION MOBILE / IPHONE
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+
+  /* =========================
+     CARTES CP / RTT
+     ========================= */
+
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* =========================
+     CALENDRIER
+     ========================= */
+
+  .calendar {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .calendar-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .calendar-navigation {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .calendar-navigation h3 {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .calendar-nav-button {
+    min-width: 42px;
+    min-height: 42px;
+  }
+
+  .today-button {
+    min-height: 42px;
+    padding: 8px 14px;
+  }
+
+
+  /* =========================
+     GRILLE DU CALENDRIER
+     ========================= */
+
+  .weekdays,
+  .calendar-grid {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .weekdays {
+    font-size: 12px;
+  }
+
+  .day {
+    min-width: 0;
+    min-height: 75px;
+    padding: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .day-number {
+    font-size: 13px;
+  }
+
+  .leave-badge {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .leave-type,
+  .leave-half {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .today-label {
+    font-size: 8px;
+  }
+
+
+  /* =========================
+     HISTORIQUE
+     ========================= */
+
+  .leave-history {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+
+  /* =========================
+     OPTIMISATION DES CONGÉS
+     ========================= */
+
+  .optimize-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .optimization-list {
+    width: 100%;
+  }
+
+  .optimization-item {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .optimization-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .optimization-actions button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+
+  /* =========================
+     RÉSUMÉ MENSUEL
+     ========================= */
+
+  .monthly-summary {
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+  }
+
+
+  /* =========================
+     BULLETIN
+     ========================= */
+
+  .bulletin {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .bulletin input,
+  .bulletin select,
+  .bulletin button {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* =========================
+     MODALE AJOUT CONGÉ
+     ========================= */
+
+  .modal-overlay {
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 20px;
+  }
+
+  .modal input,
+  .modal select {
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+
+  .modal button {
+    min-height: 44px;
+    padding: 8px 16px;
+  }
+
+}
+
+
+/* ============================================================
+   📱 PETITS IPHONE
+   ============================================================ */
+
+@media (max-width: 390px) {
+
+  .app {
+    padding: 8px;
+  }
+
+  .day {
+    min-height: 68px;
+    padding: 3px;
+  }
+
+  .leave-type,
+  .leave-half {
+    font-size: 9px;
+  }
+
+  .weekdays {
+    font-size: 11px;
+  }
+
+}

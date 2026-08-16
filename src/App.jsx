@@ -5,8 +5,11 @@ import Dashboard from "./components/Dashboard";
 import Calendar from "./components/Calendar";
 import LeaveHistory from "./components/LeaveHistory";
 import AddLeaveModal from "./components/AddLeaveModal";
+import MonthlySummary from "./components/MonthlySummary";
 import Bulletin from "./components/Bulletin";
 import MonthStatus from "./components/MonthStatus";
+import OptimizeLeaves from "./components/OptimizeLeaves";
+import Backup from "./components/Backup";
 import { getDatesBetween } from "./utils/dates";
 import { settings } from "./data/settings";
 import { congesInitiaux } from "./data/conges";
@@ -44,6 +47,12 @@ function App() {
     useState(null);
 
 
+  /*
+   * ============================================================
+   * SAUVEGARDE
+   * ============================================================
+   */
+
   useEffect(() => {
 
     localStorage.setItem(
@@ -64,6 +73,12 @@ function App() {
   }, [bulletin]);
 
 
+  /*
+   * ============================================================
+   * AJOUT D'UN CONGÉ CLASSIQUE
+   * ============================================================
+   */
+
   function ajouterConge(nouveauConge) {
 
     const dates = getDatesBetween(
@@ -72,21 +87,22 @@ function App() {
     );
 
 
-    const nouveauxConges = dates.map(date => ({
+    const nouveauxConges =
+      dates.map(date => ({
 
-      debut: date,
-      fin: date,
+        debut: date,
+        fin: date,
 
-      type: nouveauConge.type,
+        type: nouveauConge.type,
 
-      jours: nouveauConge.jours,
+        jours: nouveauConge.jours,
 
-      moment: nouveauConge.moment,
+        moment: nouveauConge.moment,
 
-      deduireDuSolde:
-        nouveauConge.deduireDuSolde
+        deduireDuSolde:
+          nouveauConge.deduireDuSolde
 
-    }));
+      }));
 
 
     setConges([
@@ -96,6 +112,173 @@ function App() {
 
   }
 
+
+  /*
+   * ============================================================
+   * AJOUT D'UNE OPTIMISATION
+   * ============================================================
+   *
+   * Cette fonction reçoit une proposition de
+   * l'optimiseur et ajoute uniquement les jours
+   * qui doivent réellement être posés.
+   */
+
+  function ajouterOptimisation(
+    proposition,
+    type
+  ) {
+
+    if (
+      !proposition ||
+      !proposition.joursAPoser ||
+      proposition.joursAPoser.length === 0
+    ) {
+
+      return;
+
+    }
+
+
+    /*
+     * Vérification du solde disponible.
+     */
+
+    const nombreJours =
+      proposition.nombreJoursAPoser;
+
+
+    const cpDisponible =
+      Number(cpN1Disponible) +
+      Number(cpNDisponible);
+
+
+    const rttDisponibleActuel =
+      Number(rttDisponible);
+
+
+    if (
+      type === "CP" &&
+      nombreJours > cpDisponible
+    ) {
+
+      window.alert(
+        "Tu n'as pas assez de CP disponibles pour cette période."
+      );
+
+      return;
+
+    }
+
+
+    if (
+      type === "RTT" &&
+      nombreJours > rttDisponibleActuel
+    ) {
+
+      window.alert(
+        "Tu n'as pas assez de RTT disponibles pour cette période."
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * Vérification des doublons.
+     */
+
+    const joursExistants =
+      proposition.joursAPoser.filter(
+        date => {
+
+          const iso =
+            typeof date === "string"
+              ? date
+              : date.toISOString().slice(0, 10);
+
+          return conges.some(
+            conge =>
+              conge.debut === iso
+          );
+
+        }
+      );
+
+
+    if (
+      joursExistants.length > 0
+    ) {
+
+      window.alert(
+        "Certains jours de cette période sont déjà posés."
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * Création des congés.
+     */
+
+    const nouveauxConges =
+      proposition.joursAPoser.map(
+        date => {
+
+          const iso =
+            typeof date === "string"
+              ? date
+              : `${date.getFullYear()}-${String(
+                  date.getMonth() + 1
+                ).padStart(2, "0")}-${String(
+                  date.getDate()
+                ).padStart(2, "0")}`;
+
+
+          return {
+
+            debut: iso,
+
+            fin: iso,
+
+            type,
+
+            jours: 1,
+
+            moment: null,
+
+            deduireDuSolde: true
+
+          };
+
+        }
+      );
+
+
+    setConges([
+      ...conges,
+      ...nouveauxConges
+    ]);
+
+
+    window.alert(
+      `${nombreJours} jour${
+        nombreJours > 1 ? "s" : ""
+      } ajouté${
+        nombreJours > 1 ? "s" : ""
+      } au calendrier.`
+    );
+
+  }
+
+
+  /*
+   * ============================================================
+   * SUPPRESSION D'UN CONGÉ
+   * ============================================================
+   */
 
   function supprimerConge(congeASupprimer) {
 
@@ -126,12 +309,26 @@ function App() {
   }
 
 
-  function enregistrerBulletin(nouveauBulletin) {
+  /*
+   * ============================================================
+   * BULLETIN
+   * ============================================================
+   */
+
+  function enregistrerBulletin(
+    nouveauBulletin
+  ) {
 
     setBulletin(nouveauBulletin);
 
   }
 
+
+  /*
+   * ============================================================
+   * DATE DU BULLETIN
+   * ============================================================
+   */
 
   const dateFinBulletin =
     new Date(
@@ -146,43 +343,66 @@ function App() {
   dateFinBulletin.setDate(0);
 
 
+  /*
+   * ============================================================
+   * CONGÉS À DÉDUIRE
+   * ============================================================
+   */
+
   const congesADeduire =
-    conges.filter(conge =>
-      conge.deduireDuSolde === true
+    conges.filter(
+      conge =>
+        conge.deduireDuSolde === true
     );
 
 
   const clesCongesInitiaux =
     new Set(
-      congesInitiaux.map(conge =>
-        `${conge.debut}-${conge.type}-${conge.jours}`
+      congesInitiaux.map(
+        conge =>
+          `${conge.debut}-${conge.type}-${conge.jours}`
       )
     );
 
 
   const congesADeduireAvantBulletin =
-    congesADeduire.filter(conge => {
+    congesADeduire.filter(
+      conge => {
 
-      const cle =
-        `${conge.debut}-${conge.type}-${conge.jours}`;
-
-      return (
-        new Date(conge.debut) <= dateFinBulletin &&
-        !clesCongesInitiaux.has(cle)
-      );
-
-    });
+        const cle =
+          `${conge.debut}-${conge.type}-${conge.jours}`;
 
 
-  const congesADeduireApresBulletin =
-    congesADeduire.filter(conge =>
-      new Date(conge.debut) > dateFinBulletin
+        return (
+          new Date(conge.debut) <=
+            dateFinBulletin &&
+          !clesCongesInitiaux.has(cle)
+        );
+
+      }
     );
 
 
+  const congesADeduireApresBulletin =
+    congesADeduire.filter(
+      conge =>
+        new Date(conge.debut) >
+        dateFinBulletin
+    );
+
+
+  /*
+   * ============================================================
+   * CALCUL CP / RTT
+   * ============================================================
+   */
+
   const cpOublies =
     congesADeduireAvantBulletin
-      .filter(conge => conge.type === "CP")
+      .filter(
+        conge =>
+          conge.type === "CP"
+      )
       .reduce(
         (total, conge) =>
           total + Number(conge.jours),
@@ -192,7 +412,10 @@ function App() {
 
   const rttOublies =
     congesADeduireAvantBulletin
-      .filter(conge => conge.type === "RTT")
+      .filter(
+        conge =>
+          conge.type === "RTT"
+      )
       .reduce(
         (total, conge) =>
           total + Number(conge.jours),
@@ -202,7 +425,10 @@ function App() {
 
   const cpDepuisBulletin =
     congesADeduireApresBulletin
-      .filter(conge => conge.type === "CP")
+      .filter(
+        conge =>
+          conge.type === "CP"
+      )
       .reduce(
         (total, conge) =>
           total + Number(conge.jours),
@@ -212,7 +438,10 @@ function App() {
 
   const rttDepuisBulletin =
     congesADeduireApresBulletin
-      .filter(conge => conge.type === "RTT")
+      .filter(
+        conge =>
+          conge.type === "RTT"
+      )
       .reduce(
         (total, conge) =>
           total + Number(conge.jours),
@@ -221,52 +450,107 @@ function App() {
 
 
   const cpTotalADeduire =
-    cpOublies + cpDepuisBulletin;
+    cpOublies +
+    cpDepuisBulletin;
 
 
   const rttTotalADeduire =
-    rttOublies + rttDepuisBulletin;
+    rttOublies +
+    rttDepuisBulletin;
 
+
+  /*
+   * ============================================================
+   * SOLDES INITIAUX
+   * ============================================================
+   */
 
   const cpN1Depart =
-    Number(bulletin.cpN1Disponible);
+    Number(
+      bulletin.cpN1Disponible
+    );
 
 
   const cpNDepart =
-    Number(bulletin.cpNDisponible);
+    Number(
+      bulletin.cpNDisponible
+    );
 
 
   const rttDepart =
-    Number(bulletin.rttDisponible);
+    Number(
+      bulletin.rttDisponible
+    );
 
+
+  /*
+   * ============================================================
+   * SOLDES ACTUELS
+   * ============================================================
+   */
 
   const cpN1Disponible =
     Math.max(
       0,
-      cpN1Depart - cpTotalADeduire
+      cpN1Depart -
+      cpTotalADeduire
     );
 
 
   const surplusCP =
     Math.max(
       0,
-      cpTotalADeduire - cpN1Depart
+      cpTotalADeduire -
+      cpN1Depart
     );
 
 
   const cpNDisponible =
     Math.max(
       0,
-      cpNDepart - surplusCP
+      cpNDepart -
+      surplusCP
     );
 
 
   const rttDisponible =
     Math.max(
       0,
-      rttDepart - rttTotalADeduire
+      rttDepart -
+      rttTotalADeduire
     );
 
+
+  /*
+   * ============================================================
+   * AFFICHAGE
+   * ============================================================
+   */
+function ajouterOptimisation(proposition, type) {
+
+  const nouveauxConges =
+    proposition.joursAPoser.map(date => ({
+
+      debut: date.toISOString().split("T")[0],
+      fin: date.toISOString().split("T")[0],
+
+      type,
+
+      jours: 1,
+
+      moment: null,
+
+      deduireDuSolde: true
+
+    }));
+
+
+  setConges([
+    ...conges,
+    ...nouveauxConges
+  ]);
+
+}
 
   return (
 
@@ -274,44 +558,134 @@ function App() {
 
       <Header />
 
-<MonthStatus bulletin={bulletin} />
+
+      <MonthStatus
+        bulletin={bulletin}
+      />
+
 
       <Bulletin
 
         bulletin={bulletin}
 
-        onSave={enregistrerBulletin}
+        onSave={
+          enregistrerBulletin
+        }
 
       />
 
 
       <Dashboard
 
-        cpN1Disponible={cpN1Disponible}
+        cpN1Disponible={
+          cpN1Disponible
+        }
 
-        cpNDisponible={cpNDisponible}
+        cpNDisponible={
+          cpNDisponible
+        }
 
-        rttDisponible={rttDisponible}
+        rttDisponible={
+          rttDisponible
+        }
+
+        cpN1Pris={
+          Math.min(
+            cpN1Depart,
+            cpTotalADeduire
+          )
+        }
+
+        cpNPris={
+          Math.max(
+            0,
+            cpTotalADeduire -
+            cpN1Depart
+          )
+        }
+
+        rttPris={
+          rttTotalADeduire
+        }
+
+        conges={
+          conges
+        }
+
+      />
+
+
+      <OptimizeLeaves
+
+        cpN1Disponible={
+          cpN1Disponible
+        }
+
+        cpNDisponible={
+          cpNDisponible
+        }
+
+        rttDisponible={
+          rttDisponible
+        }
+
+        conges={
+          conges
+        }
+
+        onAddOptimization={
+          ajouterOptimisation
+        }
+
+      />
+<Backup
+  conges={conges}
+  bulletin={bulletin}
+/>
+
+      <MonthlySummary
+
+        bulletin={
+          bulletin
+        }
+
+        cpDepuisBulletin={
+          cpDepuisBulletin
+        }
+
+        rttDepuisBulletin={
+          rttDepuisBulletin
+        }
 
       />
 
 
       <Calendar
 
-        conges={conges}
+        conges={
+          conges
+        }
 
-        setConges={setConges}
+        setConges={
+          setConges
+        }
 
-        onSelectDate={setDateSelectionnee}
+        onSelectDate={
+          setDateSelectionnee
+        }
 
       />
 
 
       <LeaveHistory
 
-        conges={conges}
+        conges={
+          conges
+        }
 
-        onDelete={supprimerConge}
+        onDelete={
+          supprimerConge
+        }
 
       />
 
@@ -320,13 +694,17 @@ function App() {
 
         <AddLeaveModal
 
-          date={dateSelectionnee}
+          date={
+            dateSelectionnee
+          }
 
           onClose={() =>
             setDateSelectionnee(null)
           }
 
-          onSave={ajouterConge}
+          onSave={
+            ajouterConge
+          }
 
         />
 
@@ -340,5 +718,3 @@ function App() {
 
 
 export default App;
-
-
