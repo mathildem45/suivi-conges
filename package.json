@@ -2,15 +2,12 @@
   "name": "suivi-conges",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://mathildem45.github.io/suivi-conges",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19.2.7",
