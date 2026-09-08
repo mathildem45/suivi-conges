@@ -938,6 +938,14 @@ select {
   border: 1px solid #e7e8ef;
 }
 
+@media (max-width: 768px) {
+  .current-month {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 .current-month strong {
   color: #202124;
   font-size: 16px;
@@ -1558,10 +1566,19 @@ body.dark .next-leave-type,
      ========================= */
 
   .monthly-summary {
-    width: 100%;
-    box-sizing: border-box;
-    overflow-x: auto;
-  }
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.monthly-summary-header,
+.current-month,
+.summary-section,
+.summary-forecast,
+.monthly-summary-note {
+  width: 100%;
+  box-sizing: border-box;
+}
 
 
   /* =========================
