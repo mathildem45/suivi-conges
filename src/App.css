@@ -1656,75 +1656,42 @@ body.dark .next-leave-type,
   }
 
 }
-
 /* =========================================
-   CORRECTION IPHONE — SUIVI DU BULLETIN
+   MOIS DU BULLETIN
 ========================================= */
 
-@media (max-width: 600px) {
+.bulletin-month-select {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: 42px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #ddd7d1;
+  border-radius: 10px;
+  background: #faf9f7;
+  color: #292725;
+  box-sizing: border-box;
+}
 
-  .monthly-summary {
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding: 20px;
-    overflow: hidden;
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+  .bulletin-month-select {
+    background: #302d2a;
+    border-color: #4a4642;
+    color: #f3f0ed;
   }
 
-  .current-month {
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding: 14px 16px;
-  }
-
-  .monthly-summary-header {
-    width: 100%;
-  }
-
-  .summary-section,
-  .summary-forecast,
-  .monthly-summary-note {
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
+  .bulletin-month-select option {
+    background: #302d2a;
+    color: #f3f0ed;
   }
 }
 
-/* =========================================
-   📱 ALIGNEMENT DU MOIS DU BULLETIN
-========================================= */
-
-@media (max-width: 600px) {
-
-  .monthly-summary {
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .monthly-summary .current-month {
-    display: flex;
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    box-sizing: border-box;
-  }
-
-}
-/* Correction du champ "Mois du bulletin" sur iPhone */
+/* Mobile */
 @media (max-width: 768px) {
-  .bulletin input[type="month"] {
-    display: block;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+  .bulletin-month-select {
     width: 100%;
     max-width: 100%;
-    box-sizing: border-box;
   }
 }
