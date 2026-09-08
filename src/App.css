@@ -1656,3 +1656,40 @@ body.dark .next-leave-type,
   }
 
 }
+
+/* =========================================
+   CORRECTION IPHONE — SUIVI DU BULLETIN
+========================================= */
+
+@media (max-width: 600px) {
+
+  .monthly-summary {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 20px;
+    overflow: hidden;
+  }
+
+  .current-month {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 14px 16px;
+  }
+
+  .monthly-summary-header {
+    width: 100%;
+  }
+
+  .summary-section,
+  .summary-forecast,
+  .monthly-summary-note {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
