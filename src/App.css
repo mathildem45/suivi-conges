@@ -1717,3 +1717,14 @@ body.dark .next-leave-type,
   }
 
 }
+/* Correction du champ "Mois du bulletin" sur iPhone */
+@media (max-width: 768px) {
+  .bulletin input[type="month"] {
+    display: block;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
