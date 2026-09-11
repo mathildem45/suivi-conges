@@ -13,6 +13,7 @@ import Backup from "./components/Backup";
 import { getDatesBetween } from "./utils/dates";
 import { settings } from "./data/settings";
 import { congesInitiaux } from "./data/conges";
+import { supabase } from "./lib/supabase";
 
 import "./App.css";
 
@@ -71,6 +72,37 @@ function App() {
     );
 
   }, [bulletin]);
+
+  useEffect(() => {
+
+    async function chargerBulletin() {
+
+      const { data, error } = await supabase
+        .from("bulletin")
+        .select("*")
+        .limit(1)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Erreur chargement bulletin :", error);
+        return;
+      }
+
+      if (data) {
+        setBulletin({
+          mois: data.mois,
+          dateFin: data.date_fin,
+          cpN1Disponible: Number(data.cp_n1_disponible),
+          cpNDisponible: Number(data.cp_n_disponible),
+          rttDisponible: Number(data.rtt_disponible),
+        });
+      }
+
+    }
+
+    chargerBulletin();
+
+  }, []);
 
 
   /*
@@ -315,11 +347,59 @@ function App() {
    * ============================================================
    */
 
-  function enregistrerBulletin(
+  async function enregistrerBulletin(
     nouveauBulletin
   ) {
 
     setBulletin(nouveauBulletin);
+
+    const { data, error } = await supabase
+      .from("bulletin")
+      .select("id")
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Erreur recherche bulletin :", error);
+      return;
+    }
+
+    const donneesBulletin = {
+      mois: nouveauBulletin.mois,
+      date_fin: nouveauBulletin.dateFin,
+      cp_n1_disponible: Number(nouveauBulletin.cpN1Disponible),
+      cp_n_disponible: Number(nouveauBulletin.cpNDisponible),
+      rtt_disponible: Number(nouveauBulletin.rttDisponible),
+    };
+
+    if (data?.id) {
+
+      const { error: erreurModification } = await supabase
+        .from("bulletin")
+        .update(donneesBulletin)
+        .eq("id", data.id);
+
+      if (erreurModification) {
+        console.error(
+          "Erreur modification bulletin :",
+          erreurModification
+        );
+      }
+
+    } else {
+
+      const { error: erreurCreation } = await supabase
+        .from("bulletin")
+        .insert([donneesBulletin]);
+
+      if (erreurCreation) {
+        console.error(
+          "Erreur création bulletin :",
+          erreurCreation
+        );
+      }
+
+    }
 
   }
 
